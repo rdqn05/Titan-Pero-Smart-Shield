@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Titan-Pero Smart Shield</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;700&family=Cairo:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#04070D;--bg2:#0A1120;--cy:#00F0FF;--am:#FFB800;--ti:#94A3B8;--cr:#FF3B5C;--tx:#E2E8F0;--hc:#00F0FF;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box;margin:0}
+body{background:radial-gradient(ellipse at 35% 45%,var(--bg2),var(--bg) 70%);color:var(--tx);font:15px/1.55 Inter,system-ui,sans-serif;overflow-x:hidden}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#vig{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .6s;background:radial-gradient(ellipse at 50% 40%,transparent 45%,rgba(255,59,92,.28))}
+body.surge #vig{opacity:1;animation:vg .8s infinite alternate}
+@keyframes vg{to{filter:brightness(1.5)}}
+header{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:calc(env(safe-area-inset-top,0px) + 12px) 24px 12px;background:rgba(4,7,13,.7);backdrop-filter:blur(14px);border-bottom:1px solid rgba(148,163,184,.15)}
+.emb{font:700 14px Orbitron,sans-serif;letter-spacing:.14em;white-space:nowrap}.emb span{color:var(--cy)}
+.tag0{font:400 10px 'JetBrains Mono',monospace;color:var(--ti);letter-spacing:.2em;margin-top:2px}
+.prog{display:flex;align-items:center;gap:6px;font:400 12px 'JetBrains Mono',monospace}
+.prog button{background:none;border:1px solid transparent;color:var(--ti);font:inherit;padding:4px 8px;border-radius:6px;cursor:pointer}
+.prog button.on{color:var(--cy);border-color:var(--cy);box-shadow:0 0 12px rgba(0,240,255,.35)}
+.prog i{width:18px;height:1px;background:var(--ti);opacity:.5}
+.btns{display:flex;gap:8px}
+.btn{background:rgba(255,255,255,.04);color:var(--tx);border:1px solid rgba(148,163,184,.4);padding:8px 12px;border-radius:8px;font:700 11px 'JetBrains Mono',monospace;letter-spacing:.08em;cursor:pointer;white-space:nowrap}
+.btn.sg{border-color:var(--cr);color:var(--cr)}
+body.surge .btn.sg{background:var(--cr);color:#fff;animation:vg .6s infinite alternate}
+.track{height:500vh;position:relative}
+.stage{position:sticky;top:0;height:100vh;overflow:hidden;z-index:2}
+.scene{position:absolute;left:36%;top:52%;width:0;height:0}
+.mv{position:absolute;left:0;top:0;width:0;height:0;perspective:1500px}
+.pv{position:absolute;left:-160px;top:-110px;width:320px;height:220px;transform-style:preserve-3d;transform:rotateX(58deg) rotateZ(-38deg)}
+.layer{position:absolute;inset:0;border-radius:16px;border:1px solid rgba(255,255,255,.2);overflow:hidden;cursor:pointer;box-shadow:0 30px 50px -22px #000;transition:box-shadow .35s,border-color .35s;will-change:transform,opacity}
+.layer svg{width:100%;height:100%;display:block}
+.layer.hot{border-color:var(--g);box-shadow:0 0 46px var(--g),0 30px 50px -22px #000}
+.lt{position:absolute;left:12px;bottom:8px;font:700 10px 'JetBrains Mono',monospace;letter-spacing:.16em;color:#fff;text-shadow:0 0 6px #000;opacity:0;transition:opacity .4s}
+.sep .lt{opacity:1}
+.glow2{position:absolute;inset:0;background:radial-gradient(circle,rgba(255,184,0,.65),transparent 70%);opacity:0;mix-blend-mode:screen}
+body.surge .glow2{animation:pl .5s infinite alternate}
+@keyframes pl{from{opacity:.15}to{opacity:.9}}
+.alert{position:absolute;right:10px;top:10px;font:700 11px 'JetBrains Mono',monospace;color:#fff;background:var(--cr);padding:3px 8px;border-radius:4px;opacity:0}
+body.surge .alert{opacity:1;animation:vg .4s infinite alternate}
+.hud{position:absolute;right:4vw;top:52%;transform:translateY(-50%);width:min(410px,92vw);max-height:78vh;overflow:auto;padding:22px;border-radius:18px;background:rgba(10,17,32,.58);backdrop-filter:blur(18px);border:1px solid color-mix(in srgb,var(--hc) 50%,transparent);box-shadow:0 0 40px color-mix(in srgb,var(--hc) 20%,transparent)}
+.hud.in{animation:sl .6s cubic-bezier(.2,.8,.2,1)}
+@keyframes sl{from{opacity:0;translate:46px 0}to{opacity:1;translate:0 0}}
+.k{font:700 10px 'JetBrains Mono',monospace;letter-spacing:.18em}
+.hud h2{font:700 19px/1.25 'Space Grotesk',Orbitron,sans-serif;margin:6px 0 2px;letter-spacing:.02em}
+.ar{font:500 14px Cairo,sans-serif;color:var(--ti);margin-bottom:8px}
+.hud p{font-size:13px;color:#cbd5e1;margin-bottom:8px}.hud p.tx{color:var(--ti);font-style:italic}
+.chips{list-style:none;display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px;padding:0}
+.chips li{font:400 11px 'JetBrains Mono',monospace;padding:3px 8px;border-radius:99px;border:1px solid color-mix(in srgb,var(--hc) 55%,transparent);color:var(--hc)}
+.mt{font:400 10px 'JetBrains Mono',monospace;color:var(--ti);letter-spacing:.2em;margin-bottom:6px}
+.mr{display:flex;justify-content:space-between;font-size:12px;margin-top:6px}.mr b{font:700 12px 'JetBrains Mono',monospace}
+.bar{height:4px;border-radius:4px;background:rgba(148,163,184,.18);overflow:hidden;margin-top:3px}
+.bar i{display:block;height:100%;border-radius:4px;animation:gr 1s ease-out;transition:width .3s}
+@keyframes gr{from{width:0}}
+.hero h1{font:700 clamp(24px,3vw,34px)/1.1 Orbitron,sans-serif;letter-spacing:.06em;margin:8px 0}.hero h1 span{color:var(--am)}
+.hint{position:absolute;left:50%;bottom:96px;translate:-50% 0;font:400 11px 'JetBrains Mono',monospace;letter-spacing:.25em;color:var(--ti);animation:bn 1.6s infinite;transition:opacity .4s}
+@keyframes bn{50%{transform:translateY(8px)}}
+footer.tm{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(4,1fr);background:rgba(4,7,13,.78);backdrop-filter:blur(14px);border-top:1px solid rgba(148,163,184,.15);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tc{padding:10px 16px;border-right:1px solid rgba(148,163,184,.1)}.tc:last-child{border:0}
+.tc small{display:block;font:400 9px 'JetBrains Mono',monospace;color:var(--ti);letter-spacing:.16em}
+.tc b{font:700 17px 'JetBrains Mono',monospace;color:var(--cy)}.tc:nth-child(2) b{color:var(--am)}.tc:nth-child(3) b{color:var(--tx)}.tc:nth-child(4) b{font-size:13px;color:#4ade80}
+body.surge .tc:nth-child(4) b{color:var(--cr)}
+#eng{position:relative;z-index:2;background:var(--bg);padding:90px 6vw 140px;border-top:1px solid rgba(0,240,255,.25)}
+#eng h2{font:700 clamp(22px,3vw,32px) Orbitron,sans-serif;letter-spacing:.08em;margin-bottom:6px}
+#eng .sub{color:var(--ti);margin-bottom:30px;max-width:640px}
+.gr{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:34px}
+.cd{padding:20px;border-radius:14px;background:linear-gradient(160deg,rgba(18,28,48,.9),rgba(8,13,24,.9));border:1px solid rgba(148,163,184,.2)}
+.cd h3{font:700 14px 'JetBrains Mono',monospace;color:var(--cy);letter-spacing:.1em;margin-bottom:8px}.cd.z h3{color:var(--am)}
+.cd p{font-size:13px;color:#cbd5e1}
+.sy{font:400 12px/1.9 'JetBrains Mono',monospace;color:var(--ti)}.sy b{color:var(--tx)}
+@media(max-width:900px){.tag0,.btn.en{display:none}.scene{left:50%;top:27%}.hud{right:3vw;left:3vw;width:auto;top:auto;bottom:104px;transform:none;max-height:42vh;padding:16px}.footer .tc{padding:8px}footer.tm{grid-template-columns:repeat(2,1fr)}.tc{padding:6px 12px}.tc b{font-size:14px}.prog button{padding:3px 5px}header{padding-left:12px;padding-right:12px}.hint{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important}}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas><div id="vig"></div>
+<header>
+  <div><div class="emb">TITAN-PERO <span>//</span> SMART SHIELD</div><div class="tag0">EXPLORE • DETECT • SURVIVE</div></div>
+  <div class="prog" id="prog"><button data-i="0">01</button><i></i><button data-i="1">02</button><i></i><button data-i="2">03</button><i></i><button data-i="3">04</button></div>
+  <div class="btns"><button class="btn en" id="goEng">ENGINEERING</button><button class="btn sg" id="sg">RADIATION SURGE TEST</button></div>
+</header>
+
+<section class="track" id="track">
+<div class="stage" id="stage">
+  <div class="scene"><div class="mv" id="mv"><div class="pv" id="pv">
+
+    <div class="layer" data-i="3" style="--g:#818cf8"><svg viewBox="0 0 320 220"><defs><pattern id="p4" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><rect width="10" height="10" fill="#1b1f33"/><rect width="10" height="4" fill="#2b3050"/><rect width="4" height="10" fill="#252a47"/></pattern><linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f46e5" stop-opacity=".35"/><stop offset="1" stop-color="#0f172a" stop-opacity=".6"/></linearGradient></defs><rect width="320" height="220" fill="url(#p4)"/><rect width="320" height="220" fill="url(#g4)"/><g stroke="#00F0FF" stroke-opacity=".28" fill="none" stroke-width="1.2"><path d="M0 40q40-14 80 0t80 0 80 0 80 0"/><path d="M0 80q40-14 80 0t80 0 80 0 80 0"/><path d="M0 120q40-14 80 0t80 0 80 0 80 0"/><path d="M0 160q40-14 80 0t80 0 80 0 80 0"/><path d="M0 200q40-14 80 0t80 0 80 0 80 0"/></g><div></div></svg><span class="lt">04 · BIO-COMFORT</span></div>
+
+    <div class="layer" data-i="2" style="--g:#00F0FF"><svg viewBox="0 0 320 220"><defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#062a35"/><stop offset="1" stop-color="#04121c"/></linearGradient><pattern id="d3" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#00F0FF" fill-opacity=".25"/></pattern></defs><rect width="320" height="220" fill="url(#g3)"/><rect width="320" height="220" fill="url(#d3)"/><g stroke="#00F0FF" stroke-width="1.4" fill="none" stroke-opacity=".8"><path d="M80 60H130V110H160"/><path d="M250 60H200V110H160"/><path d="M80 160H130V110"/><path d="M250 160H200V110"/><path d="M20 20H60V40M300 200H260V180M20 200V170H50M300 20V50H270"/></g><g fill="#00F0FF"><circle cx="80" cy="60" r="5"/><circle cx="250" cy="60" r="5"/><circle cx="80" cy="160" r="5"/><circle cx="250" cy="160" r="5"/><circle cx="130" cy="60" r="2.5"/><circle cx="200" cy="160" r="2.5"/></g><rect x="136" y="90" width="48" height="40" rx="4" fill="#031017" stroke="#00F0FF" stroke-width="1.5"/><text x="160" y="114" fill="#00F0FF" font-family="monospace" font-size="11" text-anchor="middle" font-weight="700">CZT</text><g fill="#cffafe" font-family="monospace" font-size="8" opacity=".9"><text x="52" y="48">CHEST</text><text x="228" y="48">L.ARM</text><text x="54" y="180">WAIST</text><text x="214" y="180">BACK OF HEAD</text></g></svg><div class="alert">ALERT · &lt;1 s</div><span class="lt">03 · SENSORS + CZT</span></div>
+
+    <div class="layer" data-i="1" style="--g:#FFB800"><svg viewBox="0 0 320 220"><defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a2a05"/><stop offset=".5" stop-color="#6b4a06"/><stop offset="1" stop-color="#2a1d03"/></linearGradient><pattern id="h2" width="40" height="46" patternUnits="userSpaceOnUse"><path d="M20 0l20 11.5v23L20 46 0 34.5v-23z" fill="none" stroke="#FFB800" stroke-opacity=".6"/><path d="M20 0v23M0 11.5l20 11.5 20-11.5M20 23v23" stroke="#FFD25E" stroke-opacity=".28" fill="none"/></pattern></defs><rect width="320" height="220" fill="url(#g2)"/><rect width="320" height="220" fill="url(#h2)"/><g fill="#cbd5e1" fill-opacity=".5"><circle cx="40" cy="30" r="2"/><circle cx="120" cy="90" r="2"/><circle cx="220" cy="50" r="2"/><circle cx="280" cy="150" r="2"/><circle cx="90" cy="180" r="2"/><circle cx="190" cy="140" r="2"/></g><path d="M0 220L120 0h60L60 220z" fill="#FFD25E" opacity=".12"/></svg><div class="glow2"></div><span class="lt">02 · TITAN-PERO SHIELD</span></div>
+
+    <div class="layer" data-i="0" style="--g:#94A3B8"><svg viewBox="0 0 320 220"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e2e8f0"/><stop offset=".5" stop-color="#64748b"/><stop offset="1" stop-color="#334155"/></linearGradient><pattern id="w1" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="12" height="12" fill="#1e293b"/><rect width="12" height="5" fill="#475569"/><rect width="5" height="12" fill="#64748b" opacity=".75"/></pattern><radialGradient id="s1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect width="320" height="220" fill="url(#w1)"/><rect width="320" height="220" fill="url(#g1)" opacity=".42"/><g fill="none" stroke="#e2e8f0" stroke-opacity=".5"><circle cx="90" cy="70" r="8"/><circle cx="90" cy="70" r="18"/><circle cx="90" cy="70" r="30"/><circle cx="230" cy="140" r="8"/><circle cx="230" cy="140" r="18"/><circle cx="230" cy="140" r="30"/></g><ellipse cx="170" cy="110" rx="160" ry="26" fill="url(#s1)" transform="rotate(-22 170 110)"/></svg><span class="lt">01 · IMPACT / MMOD</span></div>
+
+  </div></div></div>
+  <div class="hud in" id="hud"></div>
+  <div class="hint" id="hint">SCROLL TO SEPARATE LAYERS ↓</div>
+</div>
+</section>
+
+<section id="eng">
+  <h2>ENGINEERING &amp; ALGORITHMS</h2>
+  <p class="sub">Full specification of the Titan-Pero Smart Shield detection stack and body sensor placement. All live figures in this demo are simulated for illustration.</p>
+  <div class="gr">
+    <div class="cd"><h3>TinyML</h3><p>Compact on-device machine-learning models running directly on the suit’s low-power processor, classifying radiation events locally and triggering danger alerts in under one second without a ground link.</p></div>
+    <div class="cd"><h3>PSD — PULSE SHAPE DISCRIMINATION</h3><p>Analyzes the waveform shape of each CZT detector pulse to distinguish particle types, such as gamma photons versus charged particles, from a single solid-state sensor.</p></div>
+    <div class="cd"><h3>SENSOR FUSION</h3><p>Merges readings from all four anatomical zones into one coherent dose map, cross-checking nodes to reject noise and localize where the radiation load is highest.</p></div>
+  </div>
+  <div class="gr">
+    <div class="cd z"><h3>ZONE 1 · CHEST</h3><p>Core torso monitoring for vital-organ dose tracking.</p></div>
+    <div class="cd z"><h3>ZONE 2 · LEFT ARM</h3><p>Limb exposure node, sensing orientation-dependent flux.</p></div>
+    <div class="cd z"><h3>ZONE 3 · WAIST</h3><p>Central-body reference node for dose-map calibration.</p></div>
+    <div class="cd z"><h3>ZONE 4 · BACK OF HEAD</h3><p>Cranial-side monitoring, critical during surface EVA.</p></div>
+  </div>
+  <div class="cd sy"><b>SYSTEM MASS</b> ~1.5 kg &nbsp;|&nbsp; <b>WEIGHT REDUCTION</b> 94% vs. traditional shielding &nbsp;|&nbsp; <b>COST</b> ~$130K (98% reduction) &nbsp;|&nbsp; <b>RESPONSE</b> &lt; 1 s &nbsp;|&nbsp; <b>AUTONOMY</b> 24 h, assisted by Perovskite harvesting &nbsp;|&nbsp; <b>MATERIALS</b> Titanium fiber · Perovskite · CZT · nanofiller textile</div>
+</section>
+
+<footer class="tm">
+  <div class="tc"><small>RADIATION ATTENUATION</small><b id="t-att">99.2%</b></div>
+  <div class="tc"><small>HARVESTED POWER</small><b id="t-pow">+420 mW</b></div>
+  <div class="tc"><small>SYSTEM MASS</small><b id="t-mass">~1.5 kg</b></div>
+  <div class="tc"><small>TINYML STATUS</small><b id="t-ml">ACTIVE / NOMINAL</b></div>
+</footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const track=$('#track'),hudEl=$('#hud'),mv=$('#mv'),hint=$('#hint'),pv=$('#pv');
+const fx=$('#fx'),cx=fx.getContext('2d');
+const els=[...document.querySelectorAll('.layer')].sort((a,b)=>a.dataset.i-b.dataset.i);
+const L=[
+ {n:'01',c:'#94A3B8',mass:.35,att:4,pow:0,en:'Outer Impact & Micrometeoroid Layer',ar:'الطبقة الخارجية المقاومة للاصطدام',
+  tex:'Metallic woven titanium-fiber mesh with ballistic sheen and micro-deflection ripples.',
+  fn:'Mechanical deflection and dispersion of high-velocity micrometeoroids, orbital debris, and abrasive lunar and Martian dust.',
+  st:['Ultra-lightweight flexible weave','High tensile impact resistance','Zero-debris deflection'],
+  m:[['Debris deflection',100,'100%'],['Dust abrasion resistance',96,'96%'],['Weave flexibility',88,'HIGH']]},
+ {n:'02',c:'#FFB800',mass:.45,att:99.2,pow:420,en:'Titan-Pero Radiation & Energy-Harvesting Shield',ar:'طبقة الحماية الإشعاعية - تيتانيوم + بيروفسكايت',
+  tex:'Crystalline geometric Perovskite lattice fused with nanoscale titanium compounds, glowing golden-amber when struck by radiation.',
+  fn:'Absorbs high-energy cosmic rays and gamma radiation, converting them into electrical pulses that self-power the suit’s electronics. Self-healing crystalline properties repair radiation-induced micro-damage, extending suit life and eliminating space waste.',
+  st:['94% weight reduction','98% cost reduction (~$130K)','Self-healing & self-powering'],
+  m:[['Radiation absorbed',99,'99.2%'],['Weight vs. traditional shielding',94,'−94%'],['Cost vs. traditional systems',98,'−98%']]},
+ {n:'03',c:'#00F0FF',mass:.40,att:99.2,pow:420,en:'Flexible Smart Sensor Network & CZT Processing Layer',ar:'طبقة الحساسات الذكية ووحدة الكشف',
+  tex:'Ultra-thin flexible substrate with glowing cyan micro-traces, node junctions, and a miniature Cadmium Zinc Telluride (CZT) solid-state detector.',
+  fn:'Distributed sensing across four zones: Chest, Left Arm, Waist, and Back of Head. The CZT unit captures photons and digitizes radiation data, while onboard TinyML, Pulse Shape Discrimination, and Sensor Fusion classify particle types and trigger alerts in under one second.',
+  st:['Response < 1 s','24 h battery autonomy','Real-time dose mapping'],
+  m:[['Alert latency',92,'< 1 s'],['Battery autonomy',100,'24 h'],['Zone coverage',100,'4 / 4']]},
+ {n:'04',c:'#818cf8',mass:.30,att:99.2,pow:420,en:'Inner Bio-Comfort & Thermal Regulation Layer',ar:'طبقة الراحة الداخلية',
+  tex:'Soft, breathable dark-charcoal and indigo nanofiller-reinforced smart textile with thermal-regulation micro-channels.',
+  fn:'Next-to-skin ergonomic comfort, moisture wicking, thermal insulation, and non-flammable safety for astronauts during prolonged IVA and EVA deep-space operations.',
+  st:['Non-flammable','Ultra-low weight','High ergonomic flexibility'],
+  m:[['Thermal regulation',91,'STABLE'],['Moisture wicking',93,'HIGH'],['Flammability',0,'NONE']]}
+];
+const heroHTML=`<div class="hero"><div class="k" style="color:var(--cy)">STATE 00 · COMPRESSED VIEW</div><h1>TITAN-PERO <span>SMART SHIELD</span></h1><p>Four protective fabric layers, one ultra-thin composite shield for deep-space Moon and Mars missions. Scroll to separate the stack, layer by layer, from outside to inside.</p><ul class="chips"><li>~1.5 kg total system</li><li>4 layers</li><li>Self-powered</li></ul><div class="mt">SIMULATED METRICS</div><div class="mr"><span>Radiation attenuation</span><b>99.2%</b></div><div class="bar"><i style="width:99%;background:var(--cy)"></i></div></div>`;
+const sandHTML=`<div class="k" style="color:var(--cy)">STATE 05 · INTERACTIVE SANDBOX</div><h2>Exploded View</h2><p>Hover or click any layer to inspect it, or run the surge test to watch absorption, self-healing, and TinyML alerts across the stack.</p><button class="btn sg" style="width:100%;margin:6px 0 12px" onclick="toggleSurge()">TOGGLE RADIATION / SOLAR FLARE SURGE</button><div class="mt">LIVE SIMULATION</div><div class="mr"><span>Lattice integrity (self-healing)</span><b id="lv-i">100%</b></div><div class="bar"><i id="lv-ib" style="width:100%;background:var(--am)"></i></div><div class="mr"><span>Energy harvested</span><b id="lv-e">0 mJ</b></div><div class="mr"><span>TinyML / PSD classification</span><b id="lv-m">NOMINAL</b></div>`;
+function cardHTML(i){const l=L[i];return `<div class="k" style="color:${l.c}">LAYER ${l.n} / 04</div><h2>${l.en}</h2><p class="ar" dir="rtl" lang="ar">${l.ar}</p><p class="tx">${l.tex}</p><p>${l.fn}</p><ul class="chips">${l.st.map(s=>`<li>${s}</li>`).join('')}</ul><div class="mt">SIMULATED METRICS</div>${l.m.map(m=>`<div class="mr"><span>${m[0]}</span><b>${m[2]}</b></div><div class="bar"><i style="width:${m[1]}%;background:${l.c}"></i></div>`).join('')}`}
+
+let tp=0,sp=0,state=-1,sel=-1,hov=-1,surge=false,gap=7,k=1,lastKey='';
+const cur=els.map(()=>({z:0,o:1,s:1}));
+const tv={att:99.2,pow:420,mass:1.5};
+let dmg=0,energy=0,hitEma=0;
+
+function toggleSurge(){surge=!surge;document.body.classList.toggle('surge',surge);$('#sg').textContent=surge?'SURGE ACTIVE · STOP':'RADIATION SURGE TEST'}
+$('#sg').onclick=toggleSurge;
+$('#goEng').onclick=()=>$('#eng').scrollIntoView({behavior:'smooth'});
+function scrollToState(s){const top=track.offsetTop,max=track.offsetHeight-innerHeight;window.scrollTo({top:top+(s+.5)/6*max,behavior:'smooth'})}
+document.querySelectorAll('#prog button').forEach(b=>b.onclick=()=>scrollToState(+b.dataset.i+1));
+els.forEach((e,i)=>{
+  e.addEventListener('mouseenter',()=>{if(state===5)hov=i});
+  e.addEventListener('mouseleave',()=>{hov=-1});
+  e.addEventListener('click',()=>{if(state===5)sel=(sel===i?-1:i)});
+});
+function onScroll(){const r=track.getBoundingClientRect(),max=track.offsetHeight-innerHeight;tp=Math.min(1,Math.max(0,-r.top/max))}
+addEventListener('scroll',onScroll,{passive:true});
+
+let W,H,dpr,stars=[],rays=[],flashes=[];
+function resize(){dpr=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;fx.width=W*dpr;fx.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0);
+  k=Math.max(.5,Math.min(1.25,Math.min(W/880,H/760)));
+  if(W<=900)k=Math.max(.5,Math.min(W/520,H/900));
+  stars=Array.from({length:150},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+.2,p:Math.random()*6.28,v:Math.random()*.15+.03}));
+  onScroll()}
+addEventListener('resize',resize);
+
+function focusIdx(){return state>=1&&state<=4?state-1:(state===5&&sel>=0?sel:-1)}
+function setHud(){
+  const f=focusIdx(),key=state+':'+sel;if(key===lastKey)return;lastKey=key;
+  let html,c='#00F0FF';
+  if(state===0){html=heroHTML}else if(state===5&&sel<0){html=sandHTML}else{html=cardHTML(f);c=L[f].c}
+  hudEl.style.setProperty('--hc',c);hudEl.innerHTML=html;
+  hudEl.classList.remove('in');void hudEl.offsetWidth;hudEl.classList.add('in');
+  document.querySelectorAll('#prog button').forEach(b=>b.classList.toggle('on',+b.dataset.i===f));
+}
+function spawn(){
+  const r=els[0].getBoundingClientRect();
+  const tx=r.left+r.width*(.3+.4*Math.random()),ty=r.top+r.height*(.3+.4*Math.random());
+  rays.push({x0:tx+(Math.random()-.5)*220,y0:-20,tx,ty,u:0,v:.012+Math.random()*.02});
+}
+function fxFrame(t){
+  cx.clearRect(0,0,W,H);
+  for(const s of stars){s.y+=s.v;if(s.y>H)s.y=0;cx.globalAlpha=.35+.45*Math.sin(t/900+s.p);cx.fillStyle='#cfe8ff';cx.fillRect(s.x,s.y,s.r,s.r)}
+  cx.globalAlpha=.07;cx.strokeStyle='#00F0FF';cx.lineWidth=1;
+  for(let x=(t/60)%60;x<W;x+=60){cx.beginPath();cx.moveTo(x,0);cx.lineTo(x,H);cx.stroke()}
+  for(let y=0;y<H;y+=60){cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke()}
+  cx.globalAlpha=1;
+  if(Math.random()<(surge?.9:.07))spawn();
+  if(surge&&Math.random()<.5)spawn();
+  const col=surge?'255,59,92':'0,240,255';let hits=0;
+  for(let i=rays.length-1;i>=0;i--){const r=rays[i];r.u+=r.v*(surge?1.6:1);
+    const u=Math.min(1,r.u),u0=Math.max(0,u-.1);
+    const x=r.x0+(r.tx-r.x0)*u,y=r.y0+(r.ty-r.y0)*u,x2=r.x0+(r.tx-r.x0)*u0,y2=r.y0+(r.ty-r.y0)*u0;
+    const g=cx.createLinearGradient(x2,y2,x,y);g.addColorStop(0,`rgba(${col},0)`);g.addColorStop(1,`rgba(${col},.9)`);
+    cx.strokeStyle=g;cx.lineWidth=surge?2:1.3;cx.beginPath();cx.moveTo(x2,y2);cx.lineTo(x,y);cx.stroke();
+    if(r.u>=1){flashes.push({x:r.tx,y:r.ty,t:0});hits++;rays.splice(i,1)}}
+  for(let i=flashes.length-1;i>=0;i--){const f=flashes[i];f.t+=.05;if(f.t>1){flashes.splice(i,1);continue}
+    cx.strokeStyle=`rgba(255,184,0,${1-f.t})`;cx.lineWidth=1.5;cx.beginPath();cx.ellipse(f.x,f.y,6+f.t*26,(6+f.t*26)*.55,0,0,6.28);cx.stroke()}
+  return hits;
+}
+function setTxt(id,v){const e=document.getElementById(id);if(e&&e.textContent!==v)e.textContent=v}
+
+function frame(t){
+  sp+=(tp-sp)*.08;
+  const ns=Math.min(5,Math.floor(sp*6+.0001));
+  if(ns!==state){state=ns;if(state!==5){sel=-1;hov=-1}}
+  setHud();
+  const f=focusIdx(),iso=state>=1&&state<=4;
+  const gT=state===0?7:state===5?92:106;gap+=(gT-gap)*.09;
+  pv.classList.toggle('sep',gap>40);
+  const a=state-1;
+  els.forEach((e,i)=>{
+    let act=true;if(iso)act=i===a;else if(state===5&&sel>=0)act=i===sel;
+    let zT=(3-i)*gap;if(iso){zT+=(i<a?52:i>a?-34:12)}
+    const oT=act?1:.18,sT=(iso&&act)?1.06:(state===5&&(hov===i||sel===i)?1.04:1);
+    const c=cur[i];c.z+=(zT-c.z)*.1;c.o+=(oT-c.o)*.12;c.s+=(sT-c.s)*.12;
+    e.style.transform=`translateZ(${c.z.toFixed(1)}px) scale(${c.s.toFixed(3)})`;e.style.opacity=c.o.toFixed(2);
+    e.classList.toggle('hot',(iso&&act)||(state===5&&(hov===i||sel===i)));
+  });
+  mv.style.transform=`translateY(${(gap*1.35*k).toFixed(1)}px) scale(${k})`;
+  hint.style.opacity=state===0?1:0;
+  const hits=fxFrame(t);
+  hitEma=hitEma*.95+hits*.05;
+  dmg=Math.min(40,dmg+hits*(surge?1.4:.08));dmg*=.992;
+  energy+=hits*(surge?3.2:.4);
+  const integ=100-dmg;
+  tv.att+=((f<0?99.2:L[f].att)-tv.att)*.1;
+  tv.pow+=(((f<0?420:L[f].pow)+(f<0||f>=1?(surge?900*hitEma:0):0))-tv.pow)*.1;
+  tv.mass+=((f<0?1.5:L[f].mass)-tv.mass)*.1;
+  setTxt('t-att',tv.att.toFixed(1)+'%');
+  setTxt('t-pow','+'+Math.round(tv.pow)+' mW');
+  setTxt('t-mass',(f<0?'~':'')+tv.mass.toFixed(2).replace(/0$/,'')+' kg');
+  setTxt('t-ml',surge?'ALERT · <1 s':'ACTIVE / NOMINAL');
+  setTxt('lv-i',integ.toFixed(1)+'%');setTxt('lv-e',Math.round(energy)+' mJ');
+  setTxt('lv-m',surge?'ALERT · HEAVY-ION / GAMMA':'NOMINAL');
+  const ib=document.getElementById('lv-ib');if(ib)ib.style.width=integ+'%';
+  requestAnimationFrame(frame);
+}
+resize();onScroll();sp=tp;requestAnimationFrame(frame);
+</script>
+</body>
+</html>
